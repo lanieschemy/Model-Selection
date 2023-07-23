@@ -1,4 +1,23 @@
-# Quality-of-Wine
+## Quality-of-Wine
+Used model selection to
+
+
+#How It's Made
+#Main Features
+* Descriptive Statistics
+  -Boxplots
+  -Histograms
+* Boruta Algorithm
+* Mallows CP
+* AIC/BIC
+* Heteroskedasticity
+  -Breusch Pagan Test
+  -Residuals plotted
+  -White Test
+*Training/Testing Split
+  -RMSE
+* 5 Fold Cross Validation
+
 Observed data through boxplots and histograms which eliminated outliers from the model to increase R^2.
 Applied the Boruta algorithm to identify the most significant variable (alcohol) and eliminate insignificant variables.
 Then, used the Mallows CP Test to continue to filter out the best predictors for the model. 
