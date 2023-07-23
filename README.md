@@ -6,7 +6,7 @@ Used model selection to
 ## Key Features
 #### Descriptive Statistics
 * Boxplots
- - Histograms
+  - Histograms
 * Boruta Algorithm
 * Mallows CP
 * AIC/BIC
