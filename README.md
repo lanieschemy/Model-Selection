@@ -1,8 +1,9 @@
 ## Quality-of-Wine
-Used model selection to
-
+Estimated a linear regression and use model selection to filter out which variables best explain the quality of wine.
 
 ## How It's Made
+* Packages
+  - 
 ## Key Features
 * Descriptive Statistics
   - Boxplots
