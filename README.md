@@ -23,8 +23,8 @@ Estimated a linear regression and used model selection to filter out which varia
 *Training/Testing Split
   - RMSE
 * 5 Fold Cross Validation
+## Lessons Learned
 
-##Lessons Learned
 Observed data through boxplots and histograms which eliminated outliers from the model to increase R^2.
 Applied the Boruta algorithm to identify the most significant variable (alcohol) and eliminate insignificant variables.
 Then, used the Mallows CP Test to continue to filter out the best predictors for the model. 
