@@ -18,7 +18,7 @@ Estimated a linear regression and used model selection to filter out which varia
 * AIC/BIC
 * Heteroskedasticity
   - Breusch Pagan Test
-  - Residuals plotted
+  - Plotted residuals
   - White Test
 *Training/Testing Split
   - RMSE
