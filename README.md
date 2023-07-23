@@ -13,6 +13,8 @@ Estimated a linear regression and used model selection to filter out which varia
 * Descriptive Statistics
   - Boxplots
   - Histograms
+  - Scatterplots
+  - Correlation plots
 * Boruta Algorithm
 * Mallows CP
 * AIC/BIC
