@@ -2,8 +2,8 @@
 Used model selection to
 
 
-#How It's Made
-##Key Features
+## How It's Made
+## Key Features
 * Descriptive Statistics
 - Boxplots
 - Histograms
