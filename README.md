@@ -3,7 +3,7 @@ Estimated a linear regression and used model selection to filter out which varia
 
 ## How It's Made
 * Data
- - https://www.kaggle.com/datasets/yasserh/wine-quality-dataset
+  - https://www.kaggle.com/datasets/yasserh/wine-quality-dataset
 * Packages
   - Boruta
   - AER
