@@ -4,18 +4,18 @@ Used model selection to
 
 ## How It's Made
 ## Key Features
-#### Descriptive Statistics
-* Boxplots
+Descriptive Statistics
+  - Boxplots
   - Histograms
 * Boruta Algorithm
 * Mallows CP
 * AIC/BIC
 * Heteroskedasticity
-  -Breusch Pagan Test
-  -Residuals plotted
-  -White Test
+  - Breusch Pagan Test
+  - Residuals plotted
+  - White Test
 *Training/Testing Split
-  -RMSE
+  - RMSE
 * 5 Fold Cross Validation
 
 Observed data through boxplots and histograms which eliminated outliers from the model to increase R^2.
