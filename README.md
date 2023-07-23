@@ -9,6 +9,7 @@ Estimated a linear regression and used model selection to filter out which varia
   - AER
   - lmvar
   - MASS
+  - corrplot
 ## Key Features
 * Descriptive Statistics
   - Boxplots
