@@ -3,10 +3,10 @@ Used model selection to
 
 
 #How It's Made
-#Main Features
+##Key Features
 * Descriptive Statistics
-  -Boxplots
-  -Histograms
+- Boxplots
+- Histograms
 * Boruta Algorithm
 * Mallows CP
 * AIC/BIC
