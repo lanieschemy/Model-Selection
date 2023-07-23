@@ -1,9 +1,12 @@
-## Quality-of-Wine
+## Quality of Wine
 Estimated a linear regression and use model selection to filter out which variables best explain the quality of wine.
 
 ## How It's Made
 * Packages
-  - 
+  - Boruta
+  - AER
+  - lmvar
+  - MASS
 ## Key Features
 * Descriptive Statistics
   - Boxplots
