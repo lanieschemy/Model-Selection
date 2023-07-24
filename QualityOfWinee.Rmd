@@ -1,0 +1,246 @@
+---
+title: "Quality of Wine"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+How much of volatile acidity, citric acid, residual sugar, chlorides, free sulfur dioxide, total sulfur dioxide, density, pH, sulfphates, and alcohol help explain the quality of wine? A linear regression will estimate the quality of wine based on these 11 predictors. The following series of tests will filter out the best model to get the most accurate results for this question.
+
+### Downloading Wine Quality Data Set
+```{r}
+Wine_Quality<- read.csv("~/Downloads/WineQT.csv")
+View(Wine_Quality)
+```
+
+### Histograms
+ In histograms 1 (fixed acidity), 2 (volatile acidity), 4 (residual sugar), 5 (chlorides), 6 (free sulfur dioxide), 7 (total sulfur dioxide), 10 (sulphates), and 11 (alcohol) the models are right-skewed, meaning there is a positive distribution. Histograms 8 (pH) and 9 (density) have a normal distribution. 
+ 
+```{r}
+library(MASS)
+hist(Wine_Quality$alcohol, prob = TRUE, xlab = "Alcohol", ylab = "Frequency", main = "Histogram of Alcohol")
+fit1<-fitdistr(Wine_Quality$alcohol, densfun="logistic")
+curve(dnorm(x,fit1$estimate[1], fit1$estimate[2]), col="red", add=T)
+hist(Wine_Quality$fixed.acidity, prob = TRUE, xlab = "Fixed Acidity", ylab = "Frequency", main = "Histogram of Fixed Acidity")
+fit1<-fitdistr(Wine_Quality$fixed.acidity, densfun="logistic")
+curve(dnorm(x,fit1$estimate[1], fit1$estimate[2]), col="red", add=T)
+hist(Wine_Quality$volatile.acidity, prob = TRUE, xlab = "Volatile Aciditiy", ylab = "Frequency", main = "Histogram of Volatile Acidity")
+fit1<-fitdistr(Wine_Quality$volatile.acidity, densfun="logistic")
+curve(dnorm(x,fit1$estimate[1], fit1$estimate[2]), col="red", add=T)
+hist(Wine_Quality$citric.acid, prob = TRUE, xlab = "Citric Acid", ylab = "Frequency", main = "Histogram of Citric Acid")
+fit1<-fitdistr(Wine_Quality$citric.acid, densfun="logistic")
+curve(dnorm(x,fit1$estimate[1], fit1$estimate[2]), col="red", add=T)
+hist(Wine_Quality$residual.sugar, prob = TRUE, xlab = "Residual Sugar", ylab = "Frequency", main = "Histogram of Residual Sugar")
+fit1<-fitdistr(Wine_Quality$residual.sugar, densfun="logistic")
+curve(dnorm(x,fit1$estimate[1], fit1$estimate[2]), col="red", add=T)
+hist(Wine_Quality$chlorides, prob = TRUE, xlab = "Chlorides", ylab = "Frequency", main = "Histogram of Chlorides")
+fit1<-fitdistr(Wine_Quality$chlorides, densfun="logistic")
+curve(dnorm(x,fit1$estimate[1], fit1$estimate[2]), col="red", add=T)
+hist(Wine_Quality$free.sulfur.dioxide, prob = TRUE, xlab = "Free Sulfur Dioxide", ylab = "Frequency", main = "Histogram of Free Sulfer Dioxide")
+fit1<-fitdistr(Wine_Quality$free.sulfur.dioxide, densfun="logistic")
+curve(dnorm(x,fit1$estimate[1], fit1$estimate[2]), col="red", add=T)
+hist(Wine_Quality$total.sulfur.dioxide, prob = TRUE, xlab = "Total Sulfur Dioxide", ylab = "Frequency", main = "Histogram of Total Sulfur Dioxide")
+fit1<-fitdistr(Wine_Quality$total.sulfur.dioxide, densfun="logistic")
+curve(dnorm(x,fit1$estimate[1], fit1$estimate[2]), col="red", add=T)
+hist(Wine_Quality$pH, prob = TRUE, xlab = "pH", ylab = "Frequency", main = "Histogram of pH")
+fit1<-fitdistr(Wine_Quality$pH, densfun="logistic")
+curve(dnorm(x,fit1$estimate[1], fit1$estimate[2]), col="red", add=T)
+hist(Wine_Quality$sulphates, prob = TRUE, xlab = "Sulphates", ylab = "Frequency", main = "Histogram of Sulphates")
+fit1<-fitdistr(Wine_Quality$sulphates, densfun="logistic")
+curve(dnorm(x,fit1$estimate[1], fit1$estimate[2]), col="red", add=T)
+```
+
+### Correlation Plot
+Based on the correlation plot above, there is a positive correlation between the quality of wine and alcohol, sulphates, citric acid, and fixed acidity. However, there is a negative correlation between wine quality and volatile acidity, chlorides, free sulfur dioxide, total sulfur dioxide, density, and pH.
+
+```{r}
+library(corrplot)
+M = cor(Wine_Quality)
+corrplot(M, method = 'shade')
+```
+
+### Box Plot
+It is evident by the models above that the data is moderately concentrated with the predictor variable citric acid having the largest spread and chlorides having the smallest spread. It is important to note when there are many outliers, as it may skews results.
+
+```{r}
+boxplot(Wine_Quality$fixed.acidity, main = "Fixed Acidity")
+boxplot(Wine_Quality$volatile.acidity, main = "Volatile Acidity")
+boxplot(Wine_Quality$citric.acid, main = "Citric Acid")
+boxplot(Wine_Quality$residual.sugar, main = "Residual Sugar")
+boxplot(Wine_Quality$chlorides, main = "Chlorides")
+boxplot(Wine_Quality$free.sulfur.dioxide, main = "Free Sulfur Dioxide")
+boxplot(Wine_Quality$total.sulfur.dioxide, main = "Total Sulfur Dioxide")
+boxplot(Wine_Quality$density, main = "Density")
+boxplot(Wine_Quality$pH, main = "PH")
+boxplot(Wine_Quality$sulphates, main = "Sulphates")
+boxplot(Wine_Quality$alcohol, main = "Alcohol")
+```
+
+### Scatter Plot
+A scatterplot shows the relationship between two variables. In this data set, it's a visual of the relationship between the quality of wine and fixed acidity, pH, alcohol, etc... Variables with a strong relationship will have clusters of data points while variables with weak relationships will have data points that are spread out. From the scatter plots, it can be said there is a strong relationship between wine quality and the other variables as of now.
+
+```{r}
+plot(Wine_Quality$fixed.acidity, Wine_Quality$quality, xlab="Fixed Acidity", ylab="Quality", main = "Scatterplot of Fixed Acidity and Quality",type = "p")
+plot(Wine_Quality$volatile.acidity, Wine_Quality$quality, xlab="Volatile Acidity", ylab="Quality", main = "Scatterplot of Volatile Acidity and Quality",type = "p")
+plot(Wine_Quality$citric.acid, Wine_Quality$quality, xlab="Citric Acid", ylab="Quality", main = "Scatterplot of Citric Acid and Quality",type = "p")
+plot(Wine_Quality$residual.sugar, Wine_Quality$quality, xlab="Residual Sugar", ylab="Quality", main = "Scatterplot of Residual Sugar and Quality",type = "p")
+plot(Wine_Quality$chlorides, Wine_Quality$quality, xlab="Chlorides", ylab="Quality", main = "Scatterplot of Chlorides and Quality",type = "p")
+plot(Wine_Quality$free.sulfur.dioxide, Wine_Quality$quality, xlab="Free Sulfur Dioxide", ylab="Quality", main = "Scatterplot of Free Sulfur Dioxide and Quality",type = "p")
+plot(Wine_Quality$total.sulfur.dioxide, Wine_Quality$quality, xlab="Total Sulfur Dioxide", ylab="Quality", main = "Scatterplot of Total Sulfur Dioxide and Quality",type = "p")
+plot(Wine_Quality$density, Wine_Quality$quality, xlab="Density", ylab="Quality", main = "Scatterplot of Density and Quality",type = "p")
+plot(Wine_Quality$pH, Wine_Quality$quality, xlab="PH", ylab="Quality", main = "Scatterplot of PH and Quality",type = "p")
+plot(Wine_Quality$sulphates, Wine_Quality$quality, xlab="Sulphates", ylab="Quality", main = "Scatterplot of Sulphates and Quality",type = "p")
+plot(Wine_Quality$alcohol, Wine_Quality$quality, xlab="Alcohol", ylab="Quality", main = "Scatterplot of Alcohol and Quality",type = "p")
+```
+
+### Statistical Summary
+
+```{r}
+summary(Wine_Quality)
+```
+
+## Question 2
+### Multiple Linear Regression Model
+
+```{r}
+wineq <- lm(quality ~ fixed.acidity + volatile.acidity + citric.acid + residual.sugar + chlorides + free.sulfur.dioxide + total.sulfur.dioxide + density + pH + sulphates + alcohol, data = Wine_Quality)
+summary(wineq)
+```
+
+### Outlier, High Leverage, and New Model
+It is evident that there are outliers and high leverage observations by the values outputted by the boxplot.stats() and hats() codes. The values derived by performing these tests confirm the outcomes of the histogram, boxplot, scatterplot, and summary functions. These values are important because they are capable of altering the model’s best-fit line.
+
+```{r}
+# Outlier
+# uses boxplot.stats() with $out  to capture outliers 
+boxplot.stats(Wine_Quality$fixed.acidity)$out
+boxplot.stats(Wine_Quality$volatile.acidity)$out
+boxplot.stats(Wine_Quality$citric.acid)$out
+boxplot.stats(Wine_Quality$residual.sugar)$out
+boxplot.stats(Wine_Quality$chlorides)$out
+boxplot.stats(Wine_Quality$free.sulfur.dioxide)$out
+boxplot.stats(Wine_Quality$total.sulfur.dioxide)$out
+boxplot.stats(Wine_Quality$density)$out
+boxplot.stats(Wine_Quality$pH)$out
+boxplot.stats(Wine_Quality$sulphates)$out
+boxplot.stats(Wine_Quality$alcohol)$out
+# High Leverage
+# creates a dataframe named hats 
+# uses hatvalues to be able to see high leverage
+hats <- as.data.frame(hatvalues(wineq))
+hats
+hats[order(hats['hatvalues(wineq)']), ]
+plot(hatvalues(wineq), type = 'h')
+# New Regression Model
+wineq2 <- lm(quality ~ volatile.acidity + chlorides + free.sulfur.dioxide + total.sulfur.dioxide + pH + sulphates + alcohol, data = Wine_Quality)
+summary(wineq2)
+```
+
+### Boruta Algorithm, Mallows CP
+First, the Boruta Algorithm  is applied to filter out which response variables were insignificant before also conducting the Mallows CP test. The Boruta Algorithm shows alcohol is the best variable, as it had the highest importance. Also, this test allows the report "rejected" on some variables which means they are insiginifcant and they can be eliminated. Next, with the results of the significant variables from the Boruta algorithm, the Mallows CP test is run. Here, the smaller the value, the better the model. Evidently, the best model had the predictors volatile acidity, chlorides, total sulfur dioxide, sulphates, and alcohol. The models to the right of the model are higher and therefore, insignificant. 
+
+```{r}
+library(Boruta)
+Bor.res <- Boruta(quality ~ volatile.acidity + chlorides + free.sulfur.dioxide + total.sulfur.dioxide + pH + sulphates + alcohol, data = Wine_Quality, doTrace = 2)
+plot(Bor.res, xlab = "", xaxt = "n", main="Boruta Algorithm")
+Lz <- lapply(1:ncol(Bor.res$ImpHistory),function(i) Bor.res$ImpHistory[is.finite(Bor.res$ImpHistory[,i]),i])
+names (Lz) <- colnames(Bor.res$ImpHistory)
+Labels <- sort(sapply(Lz,median))
+axis(side = 1,las=2,labels = names(Labels),
+at = 1:ncol(Bor.res$ImpHistory), cex.axis = 0.7)
+boruta_signif <- names(Bor.res$finalDecision[Bor.res$finalDecision %in% c("Confirmed", "Tentative")])
+boruta_signif_Conf <- names(Bor.res$finalDecision[Bor.res$finalDecision %in% c("Confirmed")])
+boruta_signif_Tent <- names(Bor.res$finalDecision[Bor.res$finalDecision %in% c("Tentative")])
+boruta_signif_Reject <- names(Bor.res$finalDecision[Bor.res$finalDecision %in% c("Rejected")])
+print(boruta_signif_Conf)
+attStats(Bor.res)
+sorted_vars = attStats(Bor.res)[order(-attStats(Bor.res)$meanImp),]
+print(sorted_vars)
+#mallowscp
+library(AER)
+library(leaps)
+mcp <- lm(quality ~ volatile.acidity + citric.acid + chlorides + total.sulfur.dioxide + density + sulphates + alcohol, data = Wine_Quality)
+ss =regsubsets(quality ~ volatile.acidity + citric.acid  + chlorides  + total.sulfur.dioxide + density  + sulphates + alcohol, method = c("exhaustive"), nbest = 3, data = Wine_Quality) 
+subsets(ss, statistic = "cp", legend =F , main = "Mallows CP", col = "green", min.size = 4)
+```
+
+## Question 5 
+### Multi Collinearity with VIF
+With the output for the vif(), all of the predictor variables are in the range of [1,2]. This means there are no variables that are highly correlated with another. Therefore the model with the removed variables won’t have significant issues with multicollinearity. 
+
+```{r}
+# Multi Collinearity
+vifFunction<- lm(quality ~ volatile.acidity  + chlorides +  total.sulfur.dioxide + sulphates + alcohol,data = Wine_Quality)
+vif(vifFunction)
+```
+
+### Plotting The Respective Residuals
+The graph with residuals versus fitted shows a red line that tries to capture all of the residuals. There are more values that are above the red line than below the red line. The residuals vs y-hat plot visualize whether heteroskedasticity is present. The results show that there is a spread in the variance, so it is present.
+```{r}
+# Plotting Respective Residuals/VIF Function
+plot(vifFunction)
+# Just to see more of the actual residuals
+plot(residuals(vifFunction))
+```
+
+### Heteroskedasticity
+Using the Breusch Pagan test, it is confirmed heteroskedasticity is present. The robust standard errors fix this. With this, all of the variables are significant and the standard errors decreased resulting in a better model.
+
+```{r}
+reg.mod = lm(quality ~ volatile.acidity  + chlorides +  total.sulfur.dioxide + sulphates + alcohol, data = Wine_Quality) 
+# BP Test Short Way
+bptest(reg.mod)
+# BP Test Long Way
+alpha <- 0.05
+ressq <- resid(reg.mod)^2
+modres <- lm(ressq~volatile.acidity  + chlorides +  total.sulfur.dioxide + sulphates + alcohol, data = Wine_Quality)
+summary(modres)
+#Robust Standard Errors
+cov1<-hccm(reg.mod, type="hc1")
+coeftest(reg.mod, vcov.=cov1)
+```
+
+### AIC/BIC Model
+Visualizing the plot of the respective residuals and y-hats in question 6, it seemed that the best fit could be a log linear form. AIC/BIC helps test if this hypothesis is correct. The AIC/BIC test included different models with varying predictors, the best model found previously, and the best model in terms of log. From the results, the best model is still the best model but better as a log linear with the same predictors obtained from previous tests.
+
+```{r}
+#AIC Model
+# For the new model, it is in log linear form. 
+bestMOD<- lm(log(quality) ~ chlorides + total.sulfur.dioxide + sulphates + alcohol + volatile.acidity, data=Wine_Quality)
+bestMOD2<- lm(quality ~ chlorides + total.sulfur.dioxide + sulphates + alcohol + volatile.acidity, data=Wine_Quality)
+MOD_1 <- lm(log(quality) ~ sulphates + alcohol,data = Wine_Quality)
+MOD_2 <- lm(log(quality) ~ pH + sulphates + alcohol,data = Wine_Quality)
+MOD_3 <-  lm(log(quality) ~ density + pH + sulphates + alcohol,data = Wine_Quality)
+MOD_4 <- lm(log(quality) ~  total.sulfur.dioxide + density + pH + sulphates + alcohol,data = Wine_Quality)
+MOD_5 <- lm(log(quality) ~ free.sulfur.dioxide + total.sulfur.dioxide + density + pH + sulphates + alcohol,data = Wine_Quality)
+MOD_6 <- lm(log(quality) ~ chlorides + free.sulfur.dioxide + total.sulfur.dioxide + density + pH + sulphates + alcohol,data = Wine_Quality)
+MOD_7 <-lm(log(quality) ~ residual.sugar + chlorides + free.sulfur.dioxide + total.sulfur.dioxide + density + pH + sulphates + alcohol,data = Wine_Quality)
+MOD_8 <-lm(log(quality) ~ citric.acid + residual.sugar + chlorides + free.sulfur.dioxide + total.sulfur.dioxide + density + pH + sulphates + alcohol,data = Wine_Quality)
+MOD_9 <- lm(log(quality) ~ volatile.acidity + citric.acid + residual.sugar + chlorides + free.sulfur.dioxide + total.sulfur.dioxide + density + pH + sulphates + alcohol,data = Wine_Quality)
+MOD_10<- lm(log(quality) ~ fixed.acidity + volatile.acidity + citric.acid + residual.sugar + chlorides + free.sulfur.dioxide + total.sulfur.dioxide + density + pH + sulphates + alcohol,data = Wine_Quality)
+AIC(MOD_1, MOD_2, MOD_3, MOD_4, MOD_5, MOD_6, MOD_7, MOD_8, MOD_9, MOD_10, bestMOD, bestMOD2)
+BIC(MOD_1, MOD_2, MOD_3, MOD_4, MOD_5, MOD_6, MOD_7, MOD_8, MOD_9, MOD_10, bestMOD, bestMOD2)
+```
+
+### Cross-Validation
+A 5-fold cross validation resulted in an RMSE of .11608. This means that on average the predicted value is off by .11608. In addition, splitting the data into testing/training to calculate the RMSE for both subsets and also got small numbers. Thus, the model is a good fit for the data and the results are accurate. 
+
+```{r}
+# train for training sample
+# test for testing sample
+set.seed(1)
+row.number <- sample(1:nrow(Wine_Quality), 0.66*nrow(Wine_Quality))
+train = Wine_Quality[row.number,]
+test = Wine_Quality[-row.number,]
+reg.mod=lm(log(quality) ~ volatile.acidity  + chlorides +  total.sulfur.dioxide + sulphates + alcohol, data=train)
+#RMSE
+sqrt(mean(log(test$quality)-predict(reg.mod,test))^2)
+sqrt(mean(log(train$quality)-predict(reg.mod,train))^2)
+# Cross Validation
+library(lmvar)
+fit= lm(log(quality) ~ volatile.acidity  + chlorides +  total.sulfur.dioxide + sulphates + alcohol,x = TRUE, y = TRUE, data=Wine_Quality)
+cv.lm(fit, k = 5)
+```
